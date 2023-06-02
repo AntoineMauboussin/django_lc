@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include
 
 
 from .views import squares # AJOUTER CETTE LIGNE
@@ -23,4 +24,5 @@ from .views import squares # AJOUTER CETTE LIGNE
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("squares/", squares, name="squares"),
+    path("", include("app.urls")), # ajouter cette ligne
 ]
