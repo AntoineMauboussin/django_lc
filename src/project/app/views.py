@@ -1,17 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
+from django.contrib.auth.decorators import login_required
+
 
 def index(request):
     # return HttpResponse(f"Hi")
     return render(request, "index.html")
 
+
 def compute_square(request, number):
     square = number * number
     context = {"square": square, "number": number}
     return render(request, "compute_square.html", context=context)
+
 
 def compute_squares(request, number):
     numbers = list(range(number))
@@ -24,10 +28,14 @@ def compute_squares(request, number):
     }
     return render(request, "compute_squares.html", context=context)
 
+
 def random_wiki(request):
-    req = Request('https://en.wikipedia.org/wiki/Special:RandomInCategory/Featured_articles', headers={'User-Agent': 'Mozilla/5.0'})
+    req = Request(
+        "https://en.wikipedia.org/wiki/Special:RandomInCategory/Featured_articles",
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
     html_page = urlopen(req).read()
-    soup = BeautifulSoup(html_page, 'html.parser')
+    soup = BeautifulSoup(html_page, "html.parser")
     title = soup.title.string
     lang = []
     for link in soup.select(".interlanguage-link a"):
@@ -35,8 +43,10 @@ def random_wiki(request):
 
     context = {"lang": lang, "title": title}
     return render(request, "random_wiki.html", context=context)
-    
-from .models import Prospect
+
+
+from .models import Prospect, Item
+
 
 @require_http_methods(["GET", "POST"])
 def form_prospect(request):
@@ -59,3 +69,28 @@ def form_prospect(request):
         return render(request, "form_received.html")
     return render(request, "form_prospect.html", context={})
 
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def create_item(request):
+    if request.method == "POST":
+        print(request.POST)
+        user_name = request.POST.get("username")
+        password = request.POST.get("password")
+        url = request.POST.get("url")
+        creation_user = request.user
+
+        item_object = Item.objects.create(
+            user_name=user_name, password=password, url=url, creation_user=creation_user
+        )
+        item_object.save()
+
+        return redirect("items_list")
+
+    return render(request, "form_item_prospect.html", context={})
+
+
+@login_required
+def items_list(request):
+    items = Item.objects.filter(creation_user=request.user)
+    return render(request, "items_list.html", context={"items": items})

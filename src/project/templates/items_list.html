@@ -1,0 +1,22 @@
+<table>
+  <thead>
+      <tr>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Connection URL</th>
+          <th>Creation Date</th>
+          <th>User</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for item in items %}
+      <tr>
+          <td>{{ item.user_name }}</td>
+          <td>{{ item.password }}</td>
+          <td>{{ item.url }}</td>
+          <td>{{ item.creation_date }}</td>
+          <td>{{ item.creation_user }}</td>
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>
