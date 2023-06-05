@@ -1,22 +1,32 @@
 <table>
-  <thead>
-      <tr>
-          <th>Username</th>
-          <th>Password</th>
-          <th>Connection URL</th>
-          <th>Creation Date</th>
-          <th>User</th>
-      </tr>
-  </thead>
-  <tbody>
-      {% for item in items %}
-      <tr>
-          <td>{{ item.user_name }}</td>
-          <td>{{ item.password }}</td>
-          <td>{{ item.url }}</td>
-          <td>{{ item.creation_date }}</td>
-          <td>{{ item.creation_user }}</td>
-      </tr>
-      {% endfor %}
-  </tbody>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Connection URL</th>
+            <th>Creation Date</th>
+            <th>User</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.user_name }}</td>
+            <td>{{ item.password }}</td>
+            <td>{{ item.url }}</td>
+            <td>{{ item.creation_date }}</td>
+            <td>{{ item.creation_user }}</td>
+            <td><a href="#" onclick="confirmDelete('{{ item.id }}')">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<script>
+    function confirmDelete(itemId) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
+            window.location.href = "/delete_item/" + itemId;
+        }
+    }
+</script>

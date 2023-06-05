@@ -1,11 +1,8 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-from bs4 import BeautifulSoup
-from urllib.request import Request, urlopen
 from django.contrib.auth.decorators import login_required
 
-from django import forms
 from app.forms import RegisterForm
 from django.contrib.auth.models import User
 
@@ -13,7 +10,6 @@ from .models import Item
 
 
 def index(request):
-    # return HttpResponse(f"Hi")
     return render(request, "index.html")
 
 
@@ -53,6 +49,12 @@ def create_item(request):
         return redirect("items_list")
 
     return render(request, "form_item_prospect.html", context={})
+
+@login_required
+def delete_item(request, item_id):
+    item = Item.objects.filter(id = item_id)
+    item.delete()
+    return redirect(reverse("items_list"))
 
 
 @login_required
