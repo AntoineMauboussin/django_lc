@@ -6,6 +6,7 @@ from .views import (
     index,
     create_item,
     items_list,
+    delete_item,
 )
 from .views import index, register
 
@@ -15,4 +16,5 @@ urlpatterns = [
     path("accounts/register", register, name="register"),
     path("create_item", create_item, name="create_item"),
     path("items_list", items_list, name="items_list"),
+    path("delete_item/<item_id>", delete_item, name="delete_item")
 ]
