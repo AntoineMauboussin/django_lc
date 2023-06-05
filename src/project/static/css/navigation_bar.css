@@ -1,9 +1,10 @@
 nav {
     display: flex;
     justify-content: space-between;
-    background-color: #0E3B2C;
+    background-color: #068359;
     color: #F2F2F2;
     padding: 12px;
+    box-shadow: 0px 0px 4px #ffffff8a;
 }
 
 nav ul {

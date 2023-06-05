@@ -1,9 +1,12 @@
 <nav>
     <h1>Password Manager</h1>
     <ul class="nav-ul">
-        <li><a href="/accounts/login">Log in</a></li>
-        <li><a href="/accounts/register">Sign up</a></li>
+        {% if user.is_authenticated %}
         <p>Logged as {{ user.username }}</p>
         <li><a href="/accounts/logout">Log out</a></li>
+        {% else %}
+        <li><a href="/accounts/login">Log in</a></li>
+        <li><a href="/accounts/register">Sign up</a></li>
+        {% endif %}
     </ul>
 </nav>
