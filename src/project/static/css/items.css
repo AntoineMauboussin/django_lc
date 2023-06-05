@@ -1,0 +1,34 @@
+.items-list {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.items-list table {
+    width: 90%;
+}
+
+.items-list table thead tr th{
+    text-align: start;
+    height: 60px;
+    font-size: 18px;
+    padding: 0 5px;
+}
+
+.items-list .actions a:first-child{
+    color: yellowgreen;
+}
+
+.items-list .actions a:last-child{
+    color: red;
+}
+
+.items-list table tbody tr td{
+    font-size: 16px;
+    height: 40px;
+    padding: 0 5px;
+}
+
+.items-list .password:hover {
+    cursor: pointer;
+}

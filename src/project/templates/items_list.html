@@ -1,31 +1,74 @@
-<table>
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Password</th>
-            <th>Connection URL</th>
-            <th>Creation Date</th>
-            <th>User</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in items %}
-        <tr>
-            <td>{{ item.user_name }}</td>
-            <td>{{ item.password }}</td>
-            <td>{{ item.url }}</td>
-            <td>{{ item.creation_date }}</td>
-            <td>{{ item.creation_user }}</td>
-            <td><a href="#" onclick="confirmDelete('{{ item.id }}')">Delete</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Password Manager</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/items.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
+</head>
+
+<body>
+    {% include 'navigation_bar.html' %}
+
+    <div class="items-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Connection URL</th>
+                    <th>Creation Date</th>
+                    <th>User</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.user_name }}</td>
+                    <td class="password" data-password="{{ item.password }}">*******</td>
+                    <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
+                    <td>{{ item.creation_date }}</td>
+                    <td>{{ item.creation_user }}</td>
+                    <td class="actions"><a href="update_item/{{ item.id }}">Update</a> /
+                        <a href="#" onclick="confirmDelete('{{ item.id }}')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
 
 <script>
+    var passwords = document.getElementsByClassName('password');
+
+    for (var i = 0; i < passwords.length; i++) {
+        passwords[i].addEventListener('click', revealPassword);
+    }
+
+    function revealPassword() {
+        var password = this.getAttribute('data-password');
+        this.innerText = password;
+        this.removeEventListener('click', revealPassword);
+        this.addEventListener('click', hidePassword);
+    }
+
+    function hidePassword() {
+        var password = this.getAttribute('data-password');
+        this.innerText = '*******';
+        this.removeEventListener('click', hidePassword);
+        this.addEventListener('click', revealPassword);
+    }
+
     function confirmDelete(itemId) {
-        if (confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
+        if (confirm("Are you sure you want to delete this element ?")) {
             window.location.href = "/delete_item/" + itemId;
         }
     }
