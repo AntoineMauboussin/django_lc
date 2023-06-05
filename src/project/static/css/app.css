@@ -1,0 +1,32 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    color: rgb(233, 228, 228);
+    background-color: rgb(31, 31, 36);
+}
+
+#index_page {
+    margin: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#index_page h1{
+    text-align: center;
+    font-size: clamp(22px, 6vw, 40px);
+}
+
+#index_page .lock{
+    width: 50vw;
+    filter: invert(100%);
+    border-radius: 25%;
+    box-shadow: 0px 0px 4px purple;
+    transition: .3s;
+}
+
+#index_page .lock:hover{
+    cursor: pointer;
+    box-shadow: 0px 0px 20px purple;
+}
