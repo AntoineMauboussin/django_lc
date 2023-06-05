@@ -2,3 +2,17 @@ body{
     margin: 0;
     padding: 0;
 }
+
+#index_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#index_page .lock{
+    width: 50vw;
+}
+
+#index_page .lock:hover{
+    cursor: pointer;
+}

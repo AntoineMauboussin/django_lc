@@ -1,14 +1,21 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Password Manager</title>
-    <link rel="stylesheet" href="{% static 'css/index.css' %}" type = "text/css">
-    <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type = "text/css">
-  </head>
-  <body>
-    {% include 'navigation_bar.html' %}
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Password Manager</title>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
+</head>
+
+<body>
+  {% include 'navigation_bar.html' %}
+  <div id="index_page">
+    <h1>Click on the padlock to access your passwords</h1>
+    <img class="lock" src="{% static 'img/lock.png' %}" />
+  </div>
+</body>
+
 </html>
