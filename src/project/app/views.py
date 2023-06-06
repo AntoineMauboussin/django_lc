@@ -7,7 +7,7 @@ from app.forms import RegisterForm
 from django.contrib.auth.models import User
 
 from .models import Item
-
+from .utils import calculate_password_score
 
 def index(request):
     return render(request, "index.html")
@@ -40,9 +40,14 @@ def create_item(request):
         password = request.POST.get("password")
         url = request.POST.get("url")
         creation_user = request.user
+        password_score = calculate_password_score(password)
 
         item_object = Item.objects.create(
-            user_name=user_name, password=password, url=url, creation_user=creation_user
+            user_name=user_name,
+            password=password,
+            url=url,
+            creation_user=creation_user,
+            password_score=password_score,
         )
         item_object.save()
 
@@ -61,6 +66,7 @@ def update_item(request, item_id):
         item.user_name = request.POST.get("username")
         item.password = request.POST.get("password")
         item.url = request.POST.get("url")
+        item.password_score = calculate_password_score(item.password)
 
         item.save()
 

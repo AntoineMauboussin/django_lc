@@ -22,3 +22,4 @@ class Item(Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     creation_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    password_score = models.CharField(blank=False, null=True, max_length=255)

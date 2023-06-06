@@ -20,6 +20,7 @@
                 <tr>
                     <th>Username</th>
                     <th>Password</th>
+                    <th>Score</th>
                     <th>Connection URL</th>
                     <th>Creation Date</th>
                     <th>User</th>
@@ -31,6 +32,7 @@
                 <tr>
                     <td>{{ item.user_name }}</td>
                     <td class="password" data-password="{{ item.password }}">••••••</td>
+                    <td>{{ item.password_score }}</td>
                     <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
                     <td>{{ item.creation_date }}</td>
                     <td>{{ item.creation_user }}</td>
