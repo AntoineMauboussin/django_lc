@@ -1,0 +1,54 @@
+.logs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.logs form {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.logs form table input{
+    font-size: 18px;
+    font-family: monospace;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid yellowgreen;
+    color: aqua;
+    text-align: end;
+}
+
+.logs form input:focus-visible{
+    outline: none;
+    box-shadow: 0px 1px 2px yellowgreen;
+}
+
+.logs .links-info {
+    display: flex;
+    gap: 16px;
+}
+
+.logs .links-info a:hover {
+    text-decoration: underline;
+}
+
+.logs .error {
+    color: rgb(255, 42, 42);
+}
+
+.logs th {
+    font-weight: 100;
+    text-align: end;
+    vertical-align: bottom;
+}
+
+.logs .errorlist {
+    color: rgb(255, 42, 42);
+}
