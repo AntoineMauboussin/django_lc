@@ -3,11 +3,12 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 
-from app.forms import RegisterForm
+from django import forms
+from app.forms import RegisterForm, ShareForm
 from django.contrib.auth.models import User
 
-from .models import Item
 from .utils import calculate_password_score
+from .models import Item, SharedItem
 
 def index(request):
     return render(request, "index.html")
@@ -91,4 +92,67 @@ def delete_item(request, item_id):
 @login_required
 def items_list(request):
     items = Item.objects.filter(creation_user=request.user)
-    return render(request, "items_list.html", context={"items": items})
+    shared_items = SharedItem.objects.filter(receiving_user=request.user)
+    has_shared_items = shared_items.exists()
+    return render(request, "items_list.html", context={"items": items,"shared_items":shared_items,"has_shared_items":has_shared_items})
+
+@login_required
+def share_item(request, id):
+    item = Item.objects.filter(id=id)
+    validation = ""
+
+    if not item.exists():
+        context = {"validation": "Url invalide"}
+        return render(request, "share_item.html", context)
+
+    if request.method == "POST":
+        form = ShareForm(request.POST)
+
+        if not(form.is_valid()):
+            context = {"validation": "Un problème est survenue"}
+            return render(request, "share_item.html", context)
+            
+        receiver = User.objects.filter(username=form.cleaned_data["username"])
+        item = Item.objects.filter(id=id)
+        
+        if receiver.exists() and receiver.first() != request.user:
+            shared_existing = SharedItem.objects.filter(
+                item=item.first(), receiving_user=receiver.first()
+            )
+
+            print(shared_existing)
+
+            if not(shared_existing.exists()):
+                shared_item = SharedItem.objects.create(
+                    item=item.first(), sending_user=request.user, receiving_user=receiver.first()
+                )
+                shared_item.save()
+                validation = "L'item à bien été partagé"
+            
+            else: 
+                validation = "Vous avez déja partagé cet élément à cet utilisateur"
+
+        else:
+            validation = "Cet utilisateur n'existe pas ou est invalide"
+
+    else:
+        form = ShareForm()
+
+    context = {"form": form, "validation": validation}
+
+    return render(request, "share_item.html", context)
+
+@login_required
+def shared_items(request):
+    shared_items = SharedItem.objects.filter(sending_user=request.user)
+    return render(request, "shared_items.html", context={"shared_items": shared_items})
+
+@login_required
+def delete_shared(request, id):
+
+    shared_item = SharedItem.objects.filter(id=id)
+
+    if shared_item.exists() and shared_item.first().sending_user == request.user:
+        shared_item.delete()
+
+    return redirect("shared_items")
