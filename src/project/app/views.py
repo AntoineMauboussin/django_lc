@@ -2,11 +2,28 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
+from cryptography.fernet import Fernet
+import base64
 
 from app.forms import RegisterForm
 from django.contrib.auth.models import User
 
 from .models import Item
+
+import secrets
+
+secret_key = "1c8FXcuaHL9qV3Zf5263TR_fU37dfkz9CU_O1ZFyno8="
+# encoded_key = base64.urlsafe_b64encode(secret_key)
+crypter = Fernet(secret_key.encode())
+
+key = Fernet.generate_key()
+print("Key : ", key.decode())
+f = Fernet(key)
+encrypted_data = f.encrypt(b"This message is being encrypted and cannot be seen!")
+print("After encryption : ", encrypted_data)
+decrypted_data = f.decrypt(encrypted_data)
+print(decrypted_data)
+print("After decryption : ", decrypted_data.decode())
 
 
 def index(request):
@@ -36,9 +53,9 @@ def register(request):
 @require_http_methods(["GET", "POST"])
 def create_item(request):
     if request.method == "POST":
-        user_name = request.POST.get("username")
-        password = request.POST.get("password")
-        url = request.POST.get("url")
+        user_name = crypter.encrypt(request.POST.get("username").encode()).decode()
+        password = crypter.encrypt(request.POST.get("password").encode()).decode()
+        url = crypter.encrypt(request.POST.get("url").encode()).decode()
         creation_user = request.user
 
         item_object = Item.objects.create(
@@ -58,15 +75,19 @@ def update_item(request, item_id):
     item = Item.objects.get(id=item_id)
 
     if request.method == "POST":
-        item.user_name = request.POST.get("username")
-        item.password = request.POST.get("password")
-        item.url = request.POST.get("url")
+        item.user_name = crypter.encrypt(request.POST.get("username").encode()).decode()
+        item.password = crypter.encrypt(request.POST.get("password").encode()).decode()
+        item.url = crypter.encrypt(request.POST.get("url").encode()).decode()
 
         item.save()
 
         return redirect("items_list")
 
     reverse_url = reverse("update_item", args=[item.id])
+
+    item.user_name = crypter.decrypt(item.user_name.encode()).decode()
+    item.password = crypter.decrypt(item.password.encode()).decode()
+    item.url = crypter.decrypt(item.url.encode()).decode()
 
     return render(
         request,
@@ -85,4 +106,10 @@ def delete_item(request, item_id):
 @login_required
 def items_list(request):
     items = Item.objects.filter(creation_user=request.user)
+
+    for item in items:
+        item.user_name = crypter.decrypt(item.user_name.encode()).decode()
+        item.password = crypter.decrypt(item.password.encode()).decode()
+        item.url = crypter.decrypt(item.url.encode()).decode()
+
     return render(request, "items_list.html", context={"items": items})
