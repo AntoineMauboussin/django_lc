@@ -14,3 +14,6 @@ class RegisterForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError("Les mots de passe ne sont pas identiques")
         return password2
+
+class ShareForm(forms.Form):
+    username = forms.CharField(label="Identifiant de l'utilisateur récipient :")

@@ -1,0 +1,27 @@
+<table>
+  <thead>
+      <tr>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Connection URL</th>
+          <th>Creation Date</th>
+          <th>Owner</th>
+          <th>Shared with</th>
+          <th>Sharing date</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for shared in shared_items %}
+      <tr>
+          <td>{{ shared.item.user_name }}</td>
+          <td>{{ shared.item.password }}</td>
+          <td>{{ shared.item.url }}</td>
+          <td>{{ shared.item.creation_date }}</td>
+          <td>{{ shared.item.creation_user }}</td>
+          <td>{{ shared.receiving_user }}</td>
+          <td>{{ shared.creation_date }}</td>
+          <td><a href="{% url 'delete_item' shared.id %}">Delete</a></td>
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>

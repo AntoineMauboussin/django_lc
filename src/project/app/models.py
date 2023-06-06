@@ -21,3 +21,9 @@ class Item(Model):
     url = models.CharField(blank=False, null=False, max_length=255)
     creation_date = models.DateTimeField(auto_now_add=True)
     creation_user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class SharedItem(Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    sending_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sending_%(class)s')
+    receiving_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(auto_now_add=True)
