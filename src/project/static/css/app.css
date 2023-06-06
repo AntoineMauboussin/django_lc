@@ -1,0 +1,60 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    color: rgb(233, 228, 228);
+    background-color: rgb(31, 31, 36);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(233, 228, 228);
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+.button {
+    font-size: 16px;
+    padding: 10px 20px;
+    text-transform: capitalize;
+    border-radius: 4px;
+    border: 2px outset yellowgreen;
+}
+
+.button:hover {
+    cursor: pointer;
+    border: 2px inset yellowgreen;
+}
+
+.button:active {
+    color: yellowgreen;
+    background-color: black;
+}
+
+#index_page {
+    margin: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#index_page h1{
+    text-align: center;
+    font-size: clamp(22px, 6vw, 40px);
+}
+
+#index_page .lock{
+    width: 25vw;
+    min-width: 200px;
+    filter: invert(100%);
+    border-radius: 25%;
+    box-shadow: 0px 0px 4px purple;
+    transition: .3s;
+}
+
+#index_page .lock:hover{
+    cursor: pointer;
+    box-shadow: 0px 0px 20px purple;
+}

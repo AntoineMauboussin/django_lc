@@ -20,6 +20,7 @@ class Item(Model):
     password = models.CharField(blank=False, null=False, max_length=255)
     url = models.CharField(blank=False, null=False, max_length=255)
     creation_date = models.DateTimeField(auto_now_add=True)
+    last_modification_date = models.DateTimeField(auto_now=True)
     creation_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class SharedItem(Model):
