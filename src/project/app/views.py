@@ -102,14 +102,14 @@ def share_item(request, id):
     validation = ""
 
     if not item.exists():
-        context = {"validation": "Url invalide"}
+        context = {"validation": "Invalid Url"}
         return render(request, "share_item.html", context)
 
     if request.method == "POST":
         form = ShareForm(request.POST)
 
         if not(form.is_valid()):
-            context = {"validation": "Un problème est survenue"}
+            context = {"validation": "A problem has occurred"}
             return render(request, "share_item.html", context)
             
         receiver = User.objects.filter(username=form.cleaned_data["username"])
@@ -127,13 +127,13 @@ def share_item(request, id):
                     item=item.first(), sending_user=request.user, receiving_user=receiver.first()
                 )
                 shared_item.save()
-                validation = "L'item à bien été partagé"
+                validation = "Password has been successfully shared"
             
             else: 
-                validation = "Vous avez déja partagé cet élément à cet utilisateur"
+                validation = "You already have shared this password to this user"
 
         else:
-            validation = "Cet utilisateur n'existe pas ou est invalide"
+            validation = "This user does not exist or is invalid"
 
     else:
         form = ShareForm()

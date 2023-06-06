@@ -16,5 +16,5 @@ class RegisterForm(forms.Form):
         return password2
 
 class ShareForm(forms.Form):
-    username = forms.CharField(label="Identifiant de l'utilisateur récipient :")
+    username = forms.CharField(label="Username you want to share with:")
             

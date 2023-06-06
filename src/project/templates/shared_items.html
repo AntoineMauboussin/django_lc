@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -14,6 +13,7 @@
 <body>
     {% include 'navigation_bar.html' %}
     <div class="items-list">
+        <h1 class="title">Shared passwords</h1>
         <table>
         <thead>
             <tr>
@@ -31,12 +31,12 @@
             <tr>
                 <td>{{ shared.item.user_name }}</td>
                 <td>{{ shared.item.password }}</td>
-                <td>{{ shared.item.url }}</td>
+                <td><a href="{{ item.url }}" target="_blank">{{ shared.item.url }}</a></td>
                 <td>{{ shared.item.creation_date }}</td>
                 <td>{{ shared.item.creation_user }}</td>
                 <td>{{ shared.receiving_user }}</td>
                 <td>{{ shared.creation_date }}</td>
-                <td><a href="{% url 'delete_shared' shared.id %}">Delete</a></td>
+                <td class="actions shared"><a href="{% url 'delete_shared' shared.id %}" title="Delete" class="tooltip"><img class="trash" src="{% static 'img/trash.png' %}" /></td>
             </tr>
             {% endfor %}
         </tbody>

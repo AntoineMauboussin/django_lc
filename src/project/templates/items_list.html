@@ -1,7 +1,7 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +13,11 @@
 
 <body>
     {% include 'navigation_bar.html' %}
-
     <div class="items-list">
+        <div class="head-title">
+            <h1 class="title">My passwords</h1>
+            <a class="button" href="/shared_items">See all shared passwords</a>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -36,43 +39,47 @@
                     <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
                     <td>{{ item.creation_date }}</td>
                     <td>{{ item.creation_user }}</td>
-                    <td class="actions"><a href="update_item/{{ item.id }}">Update</a> /
-                        <a href="#" onclick="confirmDelete('{{ item.id }}')">Delete</a>
+                    <td class="actions">
+                        <a href="update_item/{{ item.id }}" title="Update" class="tooltip"><img class="edit"
+                                src="{% static 'img/edit.png' %}" /></a>
+                        <a href="#" onclick="confirmDelete('{{ item.id }}')" title="Delete" class="tooltip"><img
+                                class="trash" src="{% static 'img/trash.png' %}" /></a>
+                        <a href="{% url 'share_item' item.id %}" title="Share" class="tooltip"><img class="share"
+                                src="{% static 'img/share.png' %}" /></a>
                     </td>
-                    <td><a href="{% url 'share_item' item.id %}">Partager</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <a class="button" href="create_item">Add new password</a>
         {% if has_shared_items %}
-            <h2>Shared items</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>Connection URL</th>
-                        <th>Creation Date</th>
-                        <th>Owner</th>
-                        <th>Shared with</th>
-                        <th>Sharing date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for shared in shared_items %}
-                    <tr>
-                        <td>{{ shared.item.user_name }}</td>
-                        <td>{{ shared.item.password }}</td>
-                        <td>{{ shared.item.url }}</td>
-                        <td>{{ shared.item.creation_date }}</td>
-                        <td>{{ shared.item.creation_user }}</td>
-                        <td>{{ shared.receiving_user }}</td>
-                        <td>{{ shared.creation_date }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <h1 class="title">Shared with me</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Connection URL</th>
+                    <th>Creation Date</th>
+                    <th>Owner</th>
+                    <th>Shared with</th>
+                    <th>Sharing date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shared in shared_items %}
+                <tr>
+                    <td>{{ shared.item.user_name }}</td>
+                    <td>{{ shared.item.password }}</td>
+                    <td><a href="{{ item.url }}" target="_blank">{{ shared.item.url }}</a></td>
+                    <td>{{ shared.item.creation_date }}</td>
+                    <td>{{ shared.item.creation_user }}</td>
+                    <td>{{ shared.receiving_user }}</td>
+                    <td>{{ shared.creation_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% endif %}
     </div>
 </body>
