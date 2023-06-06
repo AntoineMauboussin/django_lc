@@ -1,5 +1,5 @@
 <nav>
-    <div class="title">
+    <div class="title" onclick="gotoHome()">
         <h1>Password_Manager</h1>
         <div class="flash"></div>
     </div>
@@ -13,3 +13,9 @@
         {% endif %}
     </ul>
 </nav>
+
+<script>
+    function gotoHome() {
+        window.location.href = "/";
+    }
+</script>

@@ -38,6 +38,12 @@ nav .title {
     color: yellowgreen;
 }
 
+nav .title:hover {
+    cursor: pointer;
+    background-color: #0051ff;
+    color: rgb(255, 255, 255);
+}
+
 nav .flash {
     width: 5px;
     height: 20px;
