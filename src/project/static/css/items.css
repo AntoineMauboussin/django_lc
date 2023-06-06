@@ -1,7 +1,10 @@
 .items-list {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-top: 24px;
+    gap: 20px;
 }
 
 .items-list table {

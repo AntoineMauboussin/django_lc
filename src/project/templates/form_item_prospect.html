@@ -1,8 +1,38 @@
-<form method="post" action="{% url 'create_item' %}">
-  {% csrf_token %}
-  <input type="text" name="username" placeholder="Nom d'utilisateur" required>
-  <input type="password" name="password" placeholder="Mot de passe" required>
-  <input type="url" name="url" placeholder="URL de connexion" required>
-  <button type="submit">Créer l'élément</button>
-</form>
-{{ item }}
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Password Manager</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/create_item.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
+</head>
+
+<body>
+  {% include 'navigation_bar.html' %}
+  <div class="create-item">
+    <h1>New Password</h1>
+    <form method="post" action="{% url 'create_item' %}">
+      {% csrf_token %}
+      <div class="item-input">
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+      </div>
+      <div class="item-input">
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+      </div>
+      <div class="item-input">
+        <label for="url">URL:</label>
+        <input type="url" name="url" required>
+      </div>
+      <button class="button" type="submit">Create</button>
+    </form>
+    {{ item }}
+  </div>
+</body>
+
+</html>

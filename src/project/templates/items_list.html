@@ -30,7 +30,7 @@
                 {% for item in items %}
                 <tr>
                     <td>{{ item.user_name }}</td>
-                    <td class="password" data-password="{{ item.password }}">*******</td>
+                    <td class="password" data-password="{{ item.password }}">••••••</td>
                     <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
                     <td>{{ item.creation_date }}</td>
                     <td>{{ item.creation_user }}</td>
@@ -41,6 +41,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        <a class="button" href="create_item">Add new password</a>
     </div>
 </body>
 
@@ -62,7 +63,7 @@
 
     function hidePassword() {
         var password = this.getAttribute('data-password');
-        this.innerText = '*******';
+        this.innerText = '••••••';
         this.removeEventListener('click', hidePassword);
         this.addEventListener('click', revealPassword);
     }
