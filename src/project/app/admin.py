@@ -1,30 +1,21 @@
 from django.contrib import admin
-from .models import Prospect, SharedItem
+from .models import Item, SharedItem
 
 
-class ProspectAdmin(admin.ModelAdmin):
+class ItemAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
-        "last_name",
-        "first_name",
-        "tel",
-        "email",
-        "created",
-        "updated",
+        "user_name",
+        "password",
+        "url",
+        "creation_date",
+        "last_modification_date",
+        "creation_user",
+        "password_score",
     )
 
-    readonly_fields = (
-        "id",
-        "last_name",
-        "first_name",
-        "tel",
-        "email",
-        "created",
-        "updated",
-        "message",
-    )
 
-admin.site.register(Prospect, ProspectAdmin)
+admin.site.register(Item, ItemAdmin)
+
 
 class SharedItemAdmin(admin.ModelAdmin):
     list_display = (
@@ -33,6 +24,7 @@ class SharedItemAdmin(admin.ModelAdmin):
         "receiving_user",
         "creation_date",
     )
+
 
 admin.site.register(SharedItem, SharedItemAdmin)
 
