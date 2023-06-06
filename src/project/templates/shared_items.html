@@ -20,7 +20,7 @@
           <td>{{ shared.item.creation_user }}</td>
           <td>{{ shared.receiving_user }}</td>
           <td>{{ shared.creation_date }}</td>
-          <td><a href="{% url 'delete_item' shared.id %}">Delete</a></td>
+          <td><a href="{% url 'delete_shared' shared.id %}">Delete</a></td>
       </tr>
       {% endfor %}
   </tbody>
