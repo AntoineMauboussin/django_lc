@@ -1,3 +1,4 @@
+
 .items-list {
     display: flex;
     flex-direction: column;
@@ -7,26 +8,56 @@
     gap: 20px;
 }
 
+.items-list .button {
+    margin-bottom: 100px;
+}
+
+.items-list .head-title {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    justify-content: space-between;
+}
+
+.items-list .title {
+    color: yellowgreen;
+    padding-bottom: 10px;
+    border-bottom: 4px solid yellowgreen;
+}
+
+.items-list .head-title .button{
+    margin: 0;
+    height: fit-content;
+}
+
 .items-list table {
     width: 90%;
 }
 
-.items-list table thead tr th{
+.items-list table thead tr th {
     text-align: start;
     height: 60px;
     font-size: 18px;
     padding: 0 5px;
 }
 
-.items-list .actions a:first-child{
+.items-list .actions a:first-child {
     color: yellowgreen;
 }
 
-.items-list .actions a:last-child{
+.items-list .shared a:first-child {
     color: red;
 }
 
-.items-list table tbody tr td{
+.items-list .actions a:nth-child(2) {
+    color: red;
+}
+
+.items-list .actions a:nth-child(3) {
+    color: aqua;
+}
+
+.items-list table tbody tr td {
     font-size: 16px;
     height: 40px;
     padding: 0 5px;
@@ -34,4 +65,42 @@
 
 .items-list .password:hover {
     cursor: pointer;
+}
+
+.items-list .actions img {
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.items-list .actions .trash {
+    background-color: rgb(182, 25, 25);
+}
+
+.items-list .actions .edit {
+    background-color: rgb(33, 155, 33);
+}
+
+.items-list .actions .share {
+    background-color: #3867ff;
+}
+
+.items-list .actions img:hover {
+    filter: drop-shadow(0px 0px 6px yellowgreen);
+}
+
+.items-list .tooltip {
+    display: inline;
+    position: relative;
+}
+
+.tooltip:hover:before {
+    background-color: rgb(0, 0, 0);
+    content: attr(title);
+    left: 0;
+    bottom: 50px;
+    position: absolute;
+    z-index: 100;
+    padding: 5px;
 }

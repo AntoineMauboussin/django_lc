@@ -5,7 +5,9 @@
     </div>
     <ul class="nav-ul">
         {% if user.is_authenticated %}
-        <p>Logged as {{ user.username }}</p>
+        <li><p>Logged as {{ user.username }}</p></li>
+        <li><a href="/items_list">My passwords</a></li>
+        <li><a href="/shared_items">Shared passwords</a></li>
         <li><a href="/accounts/logout">Log out</a></li>
         {% else %}
         <li><a href="/accounts/login">Log in</a></li>
