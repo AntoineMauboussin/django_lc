@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Prospect
+from .models import Prospect, SharedItem
 
 
 class ProspectAdmin(admin.ModelAdmin):
@@ -25,5 +25,15 @@ class ProspectAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Prospect, ProspectAdmin)
+
+class SharedItemAdmin(admin.ModelAdmin):
+    list_display = (
+        "item",
+        "sending_user",
+        "receiving_user",
+        "creation_date",
+    )
+
+admin.site.register(SharedItem, SharedItemAdmin)
 
 # Register your models here.

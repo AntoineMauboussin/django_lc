@@ -1,7 +1,7 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,11 +37,41 @@
                     <td class="actions"><a href="update_item/{{ item.id }}">Update</a> /
                         <a href="#" onclick="confirmDelete('{{ item.id }}')">Delete</a>
                     </td>
+                    <td><a href="{% url 'share_item' item.id %}">Partager</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <a class="button" href="create_item">Add new password</a>
+        {% if has_shared_items %}
+            <h2>Shared items</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Connection URL</th>
+                        <th>Creation Date</th>
+                        <th>Owner</th>
+                        <th>Shared with</th>
+                        <th>Sharing date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shared in shared_items %}
+                    <tr>
+                        <td>{{ shared.item.user_name }}</td>
+                        <td>{{ shared.item.password }}</td>
+                        <td>{{ shared.item.url }}</td>
+                        <td>{{ shared.item.creation_date }}</td>
+                        <td>{{ shared.item.creation_user }}</td>
+                        <td>{{ shared.receiving_user }}</td>
+                        <td>{{ shared.creation_date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
 </body>
 

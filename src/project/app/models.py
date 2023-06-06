@@ -22,3 +22,9 @@ class Item(Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     creation_user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class SharedItem(Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    sending_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sending_%(class)s')
+    receiving_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(auto_now_add=True)
