@@ -14,3 +14,7 @@ class RegisterForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError("Passwords do not match")
         return password2
+
+class ShareForm(forms.Form):
+    username = forms.CharField(label="Username you want to share with:")
+            

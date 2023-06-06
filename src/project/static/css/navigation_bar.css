@@ -1,7 +1,7 @@
 nav {
     display: flex;
     justify-content: space-between;
-    background-color: #068359;
+    background-color: rgb(43, 43, 48);
     color: #F2F2F2;
     padding: 12px;
     box-shadow: 0px 0px 4px #ffffff8a;
@@ -30,4 +30,44 @@ nav a:hover {
     cursor: pointer;
     padding-bottom: 5px;
     border-bottom: 2px solid #F2F2F2;
+}
+
+nav .title {
+    display: flex;
+    align-items: center;
+    color: yellowgreen;
+}
+
+nav .title:hover {
+    cursor: pointer;
+    background-color: #0051ff;
+    color: rgb(255, 255, 255);
+}
+
+nav .flash {
+    width: 5px;
+    height: 20px;
+    background-color: #F2F2F2;
+    animation-duration: 1.5s;
+    animation-name: cling;
+    animation-iteration-count: infinite;
+    transition: none;
+}
+
+@keyframes cling {
+    0% {
+        opacity: 1;
+    }
+
+    39% {
+        opacity: 1;
+    }
+
+    40% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }

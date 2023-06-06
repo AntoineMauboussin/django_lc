@@ -1,8 +1,13 @@
 <nav>
-    <h1>Password Manager</h1>
+    <div class="title" onclick="gotoHome()">
+        <h1>Password_Manager</h1>
+        <div class="flash"></div>
+    </div>
     <ul class="nav-ul">
         {% if user.is_authenticated %}
-        <p>Logged as {{ user.username }}</p>
+        <li><p>Logged as {{ user.username }}</p></li>
+        <li><a href="/items_list">My passwords</a></li>
+        <li><a href="/shared_items">Shared passwords</a></li>
         <li><a href="/accounts/logout">Log out</a></li>
         {% else %}
         <li><a href="/accounts/login">Log in</a></li>
@@ -10,3 +15,9 @@
         {% endif %}
     </ul>
 </nav>
+
+<script>
+    function gotoHome() {
+        window.location.href = "/";
+    }
+</script>

@@ -15,6 +15,16 @@
     gap: 16px;
 }
 
+#id_username {
+    font-size: 18px;
+    font-family: monospace;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid yellowgreen;
+    color: aqua;
+    text-align: end;
+}
+
 .logs form table input{
     font-size: 18px;
     font-family: monospace;

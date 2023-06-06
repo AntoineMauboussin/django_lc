@@ -3,27 +3,16 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from cryptography.fernet import Fernet
-import base64
 
-from app.forms import RegisterForm
+from django import forms
+from app.forms import RegisterForm, ShareForm
 from django.contrib.auth.models import User
 
-from .models import Item
-
-import secrets
-
 secret_key = "1c8FXcuaHL9qV3Zf5263TR_fU37dfkz9CU_O1ZFyno8="
-# encoded_key = base64.urlsafe_b64encode(secret_key)
 crypter = Fernet(secret_key.encode())
 
-key = Fernet.generate_key()
-print("Key : ", key.decode())
-f = Fernet(key)
-encrypted_data = f.encrypt(b"This message is being encrypted and cannot be seen!")
-print("After encryption : ", encrypted_data)
-decrypted_data = f.decrypt(encrypted_data)
-print(decrypted_data)
-print("After decryption : ", decrypted_data.decode())
+from .utils import calculate_password_score
+from .models import Item, SharedItem
 
 
 def index(request):
@@ -57,9 +46,14 @@ def create_item(request):
         password = crypter.encrypt(request.POST.get("password").encode()).decode()
         url = crypter.encrypt(request.POST.get("url").encode()).decode()
         creation_user = request.user
+        password_score = calculate_password_score(password)
 
         item_object = Item.objects.create(
-            user_name=user_name, password=password, url=url, creation_user=creation_user
+            user_name=user_name,
+            password=password,
+            url=url,
+            creation_user=creation_user,
+            password_score=password_score,
         )
         item_object.save()
 
@@ -78,6 +72,8 @@ def update_item(request, item_id):
         item.user_name = crypter.encrypt(request.POST.get("username").encode()).decode()
         item.password = crypter.encrypt(request.POST.get("password").encode()).decode()
         item.url = crypter.encrypt(request.POST.get("url").encode()).decode()
+
+        item.password_score = calculate_password_score(item.password)
 
         item.save()
 
@@ -112,4 +108,79 @@ def items_list(request):
         item.password = crypter.decrypt(item.password.encode()).decode()
         item.url = crypter.decrypt(item.url.encode()).decode()
 
-    return render(request, "items_list.html", context={"items": items})
+    shared_items = SharedItem.objects.filter(receiving_user=request.user)
+    has_shared_items = shared_items.exists()
+    return render(
+        request,
+        "items_list.html",
+        context={
+            "items": items,
+            "shared_items": shared_items,
+            "has_shared_items": has_shared_items,
+        },
+    )
+
+
+@login_required
+def share_item(request, id):
+    item = Item.objects.filter(id=id)
+    validation = ""
+
+    if not item.exists():
+        context = {"validation": "Invalid Url"}
+        return render(request, "share_item.html", context)
+
+    if request.method == "POST":
+        form = ShareForm(request.POST)
+
+        if not (form.is_valid()):
+            context = {"validation": "A problem has occurred"}
+            return render(request, "share_item.html", context)
+
+        receiver = User.objects.filter(username=form.cleaned_data["username"])
+        item = Item.objects.filter(id=id)
+
+        if receiver.exists() and receiver.first() != request.user:
+            shared_existing = SharedItem.objects.filter(
+                item=item.first(), receiving_user=receiver.first()
+            )
+
+            print(shared_existing)
+
+            if not (shared_existing.exists()):
+                shared_item = SharedItem.objects.create(
+                    item=item.first(),
+                    sending_user=request.user,
+                    receiving_user=receiver.first(),
+                )
+                shared_item.save()
+                validation = "Password has been successfully shared"
+
+            else:
+                validation = "You already have shared this password to this user"
+
+        else:
+            validation = "This user does not exist or is invalid"
+
+    else:
+        form = ShareForm()
+
+    context = {"form": form, "validation": validation}
+
+    return render(request, "share_item.html", context)
+
+
+@login_required
+def shared_items(request):
+    shared_items = SharedItem.objects.filter(sending_user=request.user)
+    return render(request, "shared_items.html", context={"shared_items": shared_items})
+
+
+@login_required
+def delete_shared(request, id):
+    shared_item = SharedItem.objects.filter(id=id)
+
+    if shared_item.exists() and shared_item.first().sending_user == request.user:
+        shared_item.delete()
+
+    return redirect("shared_items")

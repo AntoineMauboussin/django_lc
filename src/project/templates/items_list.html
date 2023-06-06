@@ -13,13 +13,17 @@
 
 <body>
     {% include 'navigation_bar.html' %}
-
     <div class="items-list">
+        <div class="head-title">
+            <h1 class="title">My passwords</h1>
+            <a class="button" href="/shared_items">See all shared passwords</a>
+        </div>
         <table>
             <thead>
                 <tr>
                     <th>Username</th>
                     <th>Password</th>
+                    <th>Score</th>
                     <th>Connection URL</th>
                     <th>Creation Date</th>
                     <th>User</th>
@@ -30,17 +34,53 @@
                 {% for item in items %}
                 <tr>
                     <td>{{ item.user_name }}</td>
-                    <td class="password" data-password="{{ item.password }}">*******</td>
+                    <td class="password" data-password="{{ item.password }}">••••••</td>
+                    <td>{{ item.password_score }}</td>
                     <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
                     <td>{{ item.creation_date }}</td>
                     <td>{{ item.creation_user }}</td>
-                    <td class="actions"><a href="update_item/{{ item.id }}">Update</a> /
-                        <a href="#" onclick="confirmDelete('{{ item.id }}')">Delete</a>
+                    <td class="actions">
+                        <a href="update_item/{{ item.id }}" title="Update" class="tooltip"><img class="edit"
+                                src="{% static 'img/edit.png' %}" /></a>
+                        <a href="#" onclick="confirmDelete('{{ item.id }}')" title="Delete" class="tooltip"><img
+                                class="trash" src="{% static 'img/trash.png' %}" /></a>
+                        <a href="{% url 'share_item' item.id %}" title="Share" class="tooltip"><img class="share"
+                                src="{% static 'img/share.png' %}" /></a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <a class="button" href="create_item">Add new password</a>
+        {% if has_shared_items %}
+        <h1 class="title">Shared with me</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Connection URL</th>
+                    <th>Creation Date</th>
+                    <th>Owner</th>
+                    <th>Shared with</th>
+                    <th>Sharing date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shared in shared_items %}
+                <tr>
+                    <td>{{ shared.item.user_name }}</td>
+                    <td>{{ shared.item.password }}</td>
+                    <td><a href="{{ item.url }}" target="_blank">{{ shared.item.url }}</a></td>
+                    <td>{{ shared.item.creation_date }}</td>
+                    <td>{{ shared.item.creation_user }}</td>
+                    <td>{{ shared.receiving_user }}</td>
+                    <td>{{ shared.creation_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
     </div>
 </body>
 
@@ -62,7 +102,7 @@
 
     function hidePassword() {
         var password = this.getAttribute('data-password');
-        this.innerText = '*******';
+        this.innerText = '••••••';
         this.removeEventListener('click', hidePassword);
         this.addEventListener('click', revealPassword);
     }
