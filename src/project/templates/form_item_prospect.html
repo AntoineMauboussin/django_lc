@@ -7,13 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Password Manager</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}" type="text/css">
-  <link rel="stylesheet" href="{% static 'css/create_item.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/compute_item.css' %}" type="text/css">
   <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
 </head>
 
 <body>
   {% include 'navigation_bar.html' %}
-  <div class="create-item">
+  <div class="compute-item">
     <h1>New Password</h1>
     <form method="post" action="{% url 'create_item' %}">
       {% csrf_token %}
