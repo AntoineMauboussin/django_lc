@@ -1,5 +1,8 @@
 <nav>
-    <h1>Password Manager</h1>
+    <div class="title">
+        <h1>Password_Manager</h1>
+        <div class="flash"></div>
+    </div>
     <ul class="nav-ul">
         {% if user.is_authenticated %}
         <p>Logged as {{ user.username }}</p>
