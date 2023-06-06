@@ -1,0 +1,7 @@
+<form method="POST" action="{{ reverse_url }}">
+  {% csrf_token %}
+  <input type="text" name="username" placeholder="Nom d'utilisateur" value="{{item.user_name}}" required>
+  <input type="password" name="password" placeholder="Mot de passe" value="{{item.password}}" required>
+  <input type="url" name="url" placeholder="URL de connexion" value="{{item.url}}" required>
+  <button type="submit">Enregistrer la modification</button>
+</form>

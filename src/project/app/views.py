@@ -50,9 +50,34 @@ def create_item(request):
 
     return render(request, "form_item_prospect.html", context={})
 
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def update_item(request, item_id):
+    Item.objects.get
+    item = Item.objects.get(id=item_id)
+
+    if request.method == "POST":
+        item.user_name = request.POST.get("username")
+        item.password = request.POST.get("password")
+        item.url = request.POST.get("url")
+
+        item.save()
+
+        return redirect("items_list")
+
+    reverse_url = reverse("update_item", args=[item.id])
+
+    return render(
+        request,
+        "form_item_update.html",
+        context={"item": item, "reverse_url": reverse_url},
+    )
+
+
 @login_required
 def delete_item(request, item_id):
-    item = Item.objects.filter(id = item_id)
+    item = Item.objects.filter(id=item_id)
     item.delete()
     return redirect(reverse("items_list"))
 
