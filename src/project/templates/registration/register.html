@@ -23,6 +23,7 @@
             <input class="button" type="submit" value="Submit">
             {% if validation %}
             <p>Account has been created!</p>
+            <a class="button" href="{% url 'login' %}">Log In</a>
             {% endif %}
         </form>
     </div>
