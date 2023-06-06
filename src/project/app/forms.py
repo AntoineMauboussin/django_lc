@@ -1,16 +1,16 @@
 from django import forms
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label="Identifiant :")
-    password1 = forms.CharField(label="Mot de passe :")
-    password2 = forms.CharField(label="Confirmation du mot de passe :")
+    username = forms.CharField(label="Username:")
+    password1 = forms.CharField(label="Password:")
+    password2 = forms.CharField(label="Password confirmation:")
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
 
         if not password2:
-            raise forms.ValidationError("Vous devez confrimer votre mot de passe")
+            raise forms.ValidationError("You need to confirm your password")
         if password1 != password2:
-            raise forms.ValidationError("Les mots de passe ne sont pas identiques")
+            raise forms.ValidationError("Passwords do not match")
         return password2
