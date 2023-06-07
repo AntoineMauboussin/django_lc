@@ -46,7 +46,7 @@ def create_item(request):
         password = crypter.encrypt(request.POST.get("password").encode()).decode()
         url = crypter.encrypt(request.POST.get("url").encode()).decode()
         creation_user = request.user
-        password_score = calculate_password_score(password)
+        password_score = calculate_password_score(request.POST.get("password"))
 
         item_object = Item.objects.create(
             user_name=user_name,
@@ -73,7 +73,7 @@ def update_item(request, item_id):
         item.password = crypter.encrypt(request.POST.get("password").encode()).decode()
         item.url = crypter.encrypt(request.POST.get("url").encode()).decode()
 
-        item.password_score = calculate_password_score(item.password)
+        item.password_score = calculate_password_score(request.POST.get("password"))
 
         item.save()
 
