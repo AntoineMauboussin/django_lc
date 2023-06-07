@@ -15,7 +15,7 @@
   {% include 'navigation_bar.html' %}
   <div class="compute-item">
     <h1>Update Password</h1>
-    <form method="POST" action="{{ reverse_url }}">
+    <form method="POST" action="{{ reverse_url }}" id="updateForm">
       {% csrf_token %}
       <div class="item-input">
         <label for="username">Username:</label>
@@ -29,10 +29,20 @@
         <label for="url">URL:</label>
         <input type="url" name="url" value="{{item.url}}" required>
       </div>
-      <button class="button" type="submit">Save modifications</button>
+      <button class="button" type="submit" >Save modifications</button>
     </form>
 
   </div>
 </body>
+<script>
+  document.getElementById("updateForm").addEventListener("submit", function(event) {
+    var oldPassword = "{{ item.password }}";
+    var newPassword = document.getElementsByName("password")[0].value;
 
+    if (oldPassword === newPassword) {
+      event.preventDefault();
+      alert("Le mot de passe est identique à celui précedemment utilisé");
+    }
+  });
+</script>
 </html>
