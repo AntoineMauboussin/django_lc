@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/items.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
+    <script type="text/javascript" src="{% static 'js/item_list.js' %}" defer></script>
 </head>
 
 <body>
@@ -35,7 +36,7 @@
                 {% for item in items %}
                 <tr>
                     <td>{{ item.user_name }}</td>
-                    <td class="password" data-password="{{ item.password }}">••••••</td>
+                    <td data-id="{{ item.id }}" class="password">••••••</td>
                     <td class="score">
                         {{ item.password_score }}
                         <div class="score-bar">
@@ -76,7 +77,7 @@
                 {% for shared in shared_items %}
                 <tr>
                     <td>{{ shared.item.user_name }}</td>
-                    <td class="password">{{ shared.item.password }}</td>
+                    <td data-id="{{ shared.item.id }}" class="password">••••••</td>
                     <td class="item-url"><a href="{{ shared.item.url }}" target="_blank" title="{{ shared.item.url }}">{{ shared.item.url }}</a></td>
                     <td>{{ shared.item.creation_date|date:"d/m/Y H:i" }}</td>
                     <td>{{ shared.item.creation_user }}</td>
@@ -91,31 +92,3 @@
 </body>
 
 </html>
-
-<script>
-    var passwords = document.getElementsByClassName('password');
-
-    for (var i = 0; i < passwords.length; i++) {
-        passwords[i].addEventListener('click', revealPassword);
-    }
-
-    function revealPassword() {
-        var password = this.getAttribute('data-password');
-        this.innerText = password;
-        this.removeEventListener('click', revealPassword);
-        this.addEventListener('click', hidePassword);
-    }
-
-    function hidePassword() {
-        var password = this.getAttribute('data-password');
-        this.innerText = '••••••';
-        this.removeEventListener('click', hidePassword);
-        this.addEventListener('click', revealPassword);
-    }
-
-    function confirmDelete(itemId) {
-        if (confirm("Are you sure you want to delete this element ?")) {
-            window.location.href = "/delete_item/" + itemId;
-        }
-    }
-</script>

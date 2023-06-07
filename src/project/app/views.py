@@ -8,6 +8,7 @@ from django.contrib import messages
 from django import forms
 from app.forms import RegisterForm, ShareForm
 from django.contrib.auth.models import User
+from django.http import JsonResponse, HttpResponseNotFound
 
 secret_key = "1c8FXcuaHL9qV3Zf5263TR_fU37dfkz9CU_O1ZFyno8="
 crypter = Fernet(secret_key.encode())
@@ -117,6 +118,12 @@ def items_list(request):
         item.url = crypter.decrypt(item.url.encode()).decode()
 
     shared_items = SharedItem.objects.filter(receiving_user=request.user)
+
+    for shared_item in shared_items:
+        shared_item.item.user_name = crypter.decrypt(shared_item.item.user_name.encode()).decode()
+        shared_item.item.password = crypter.decrypt(shared_item.item.password.encode()).decode()
+        shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
+
     has_shared_items = shared_items.exists()
     return render(
         request,
@@ -183,12 +190,8 @@ def shared_items(request):
     shared_items = SharedItem.objects.filter(sending_user=request.user)
 
     for shared_item in shared_items:
-        shared_item.item.user_name = crypter.decrypt(
-            shared_item.item.user_name.encode()
-        ).decode()
-        shared_item.item.password = crypter.decrypt(
-            shared_item.item.password.encode()
-        ).decode()
+        shared_item.item.user_name = crypter.decrypt(shared_item.item.user_name.encode()).decode()
+        shared_item.item.password = crypter.decrypt(shared_item.item.password.encode()).decode()
         shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
 
     return render(request, "shared_items.html", context={"shared_items": shared_items})
@@ -203,6 +206,19 @@ def delete_shared(request, id):
 
     return redirect("shared_items")
 
+@login_required
+def display_password(request, id):
+    item = Item.objects.get(id=id)
+    shared = SharedItem.objects.filter(item=item, receiving_user = request.user)
+    if(item.creation_user == request.user or shared.exists()):
+        data = {
+                'password': crypter.decrypt(item.password.encode()).decode()
+        }
+
+        return JsonResponse(data)
+
+    else:
+        return HttpResponseNotFound("error")
 
 @login_required
 def change_username(request):
