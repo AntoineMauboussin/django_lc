@@ -27,10 +27,17 @@ def register(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-            User.objects.create_user(
-                form.cleaned_data["username"], "", form.cleaned_data["password1"]
-            )
-            validation = True
+            existing_user = User.objects.filter(
+                username=form.cleaned_data["username"]
+            ).exists()
+
+            if existing_user:
+                messages.error(request, "Username is already in use.")
+            else:
+                User.objects.create_user(
+                    form.cleaned_data["username"], "", form.cleaned_data["password1"]
+                )
+                validation = True
 
     else:
         form = RegisterForm()
@@ -196,10 +203,11 @@ def delete_shared(request, id):
 
     return redirect("shared_items")
 
+
 @login_required
 def change_username(request):
-    if request.method == 'POST':
-        new_username = request.POST.get('new_username')
+    if request.method == "POST":
+        new_username = request.POST.get("new_username")
 
         existing_user = User.objects.filter(username=new_username).exists()
         if existing_user:
@@ -208,6 +216,6 @@ def change_username(request):
             user = request.user
             user.username = new_username
             user.save()
-            return redirect('index')
+            return redirect("index")
 
-    return render(request, 'change_username.html')
+    return render(request, "change_username.html")

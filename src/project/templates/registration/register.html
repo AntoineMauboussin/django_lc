@@ -15,6 +15,13 @@
     {% include 'navigation_bar.html' %}
     <div class="logs">
         <h1>Register</h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="error alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
         <form action="" method="post">
             {% csrf_token %}
             <table>
