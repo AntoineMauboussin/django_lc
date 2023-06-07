@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/items.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
+    <script type="text/javascript" src="{% static 'js/item_list.js' %}" defer></script>
 </head>
 
 <body>
@@ -30,8 +31,8 @@
             {% for shared in shared_items %}
             <tr>
                 <td>{{ shared.item.user_name }}</td>
-                <td>{{ shared.item.password }}</td>
-                <td><a href="{{ item.url }}" target="_blank">{{ shared.item.url }}</a></td>
+                <td data-id="{{ shared.item.id }}" class="password">••••••</td>
+                <td><a href="{{ shared.item.url }}" target="_blank">{{ shared.item.url }}</a></td>
                 <td>{{ shared.item.creation_date }}</td>
                 <td>{{ shared.item.creation_user }}</td>
                 <td>{{ shared.receiving_user }}</td>
