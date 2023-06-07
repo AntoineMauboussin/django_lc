@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from cryptography.fernet import Fernet
+from django.contrib import messages
 
 from django import forms
 from app.forms import RegisterForm, ShareForm
@@ -194,3 +195,19 @@ def delete_shared(request, id):
         shared_item.delete()
 
     return redirect("shared_items")
+
+@login_required
+def change_username(request):
+    if request.method == 'POST':
+        new_username = request.POST.get('new_username')
+
+        existing_user = User.objects.filter(username=new_username).exists()
+        if existing_user:
+            messages.error(request, "Username is already in use.")
+        else:
+            user = request.user
+            user.username = new_username
+            user.save()
+            return redirect('index')  # Rediriger l'utilisateur vers la page de profil
+
+    return render(request, 'change_username.html')

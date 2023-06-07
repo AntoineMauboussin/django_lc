@@ -1,3 +1,4 @@
+{% load static %}
 <nav>
     <div class="title" onclick="gotoHome()">
         <h1>Password_Manager</h1>
@@ -5,7 +6,12 @@
     </div>
     <ul class="nav-ul">
         {% if user.is_authenticated %}
-        <li><p>Logged as {{ user.username }}</p></li>
+        <li class="action-username">
+            <p>Logged as {{ user.username }}</p>
+            <a href="changedmymind" title="Change username" class="tooltip">
+                <img class="edit" src="{% static 'img/edit.png' %}" />
+            </a>
+        </li>
         <li><a href="/items_list">My passwords</a></li>
         <li><a href="/shared_items">Shared passwords</a></li>
         <li><a href="/accounts/logout">Log out</a></li>

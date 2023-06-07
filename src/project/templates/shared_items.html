@@ -36,7 +36,7 @@
                 <td>{{ shared.item.creation_date|date:"d/m/Y H:i" }}</td>
                 <td>{{ shared.item.creation_user }}</td>
                 <td>{{ shared.receiving_user }}</td>
-                <td>{{ shared.creation_date }}</td>
+                <td>{{ shared.creation_date|date:"d/m/Y H:i" }}</td>
                 <td class="actions shared"><a href="{% url 'delete_shared' shared.id %}" title="Delete" class="tooltip"><img class="trash" src="{% static 'img/trash.png' %}" /></td>
             </tr>
             {% endfor %}
