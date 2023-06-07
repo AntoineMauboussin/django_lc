@@ -208,6 +208,6 @@ def change_username(request):
             user = request.user
             user.username = new_username
             user.save()
-            return redirect('index')  # Rediriger l'utilisateur vers la page de profil
+            return redirect('index')
 
     return render(request, 'change_username.html')
