@@ -36,7 +36,12 @@
                 <tr>
                     <td>{{ item.user_name }}</td>
                     <td class="password" data-password="{{ item.password }}">••••••</td>
-                    <td>{{ item.password_score }}</td>
+                    <td class="score">
+                        {{ item.password_score }}
+                        <div class="score-bar">
+                            <div class="score-{{item.password_score}}"></div>
+                        </div>
+                    </td>
                     <td class="item-url"><a href="{{ item.url }}" target="_blank" title="{{ item.url }}">{{ item.url }}</a></td>
                     <td>{{ item.creation_date|date:"d/m/Y H:i" }}</td>
                     <td>{{ item.creation_user }}</td>

@@ -115,3 +115,51 @@
     z-index: 100;
     padding: 5px;
 }
+
+.items-list .score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.items-list .score .score-bar {
+    width: 60%;
+    height: 3px;
+    border-radius: 10px;
+    background-color: #3b3b3b;
+}
+
+.items-list .score .score-1 {
+    width: 20%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: red;
+}
+
+.items-list .score .score-2 {
+    width: 40%;
+    border-radius: 10px;
+    height: 100%;
+    background-color: orangered;
+}
+
+.items-list .score .score-3 {
+    width: 60%;
+    border-radius: 10px;
+    height: 100%;
+    background-color: orange;
+}
+
+.items-list .score .score-4 {
+    width: 80%;
+    border-radius: 10px;
+    height: 100%;
+    background-color: yellow;
+}
+
+.items-list .score .score-5 {
+    width: 100%;
+    border-radius: 10px;
+    height: 100%;
+    background-color: yellowgreen;
+}
