@@ -24,11 +24,12 @@
 
         <form action="" method="post">
             {% csrf_token %}
+            {% if not validation %}
             <table>
                 {{ form.as_table }}
             </table>
             <input class="button" type="submit" value="Submit">
-            {% if validation %}
+            {% else %}
             <p>Account has been created!</p>
             <a class="button" href="{% url 'login' %}">Log In</a>
             {% endif %}
