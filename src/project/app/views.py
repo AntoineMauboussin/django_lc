@@ -173,6 +173,16 @@ def share_item(request, id):
 @login_required
 def shared_items(request):
     shared_items = SharedItem.objects.filter(sending_user=request.user)
+
+    for shared_item in shared_items:
+        shared_item.item.user_name = crypter.decrypt(
+            shared_item.item.user_name.encode()
+        ).decode()
+        shared_item.item.password = crypter.decrypt(
+            shared_item.item.password.encode()
+        ).decode()
+        shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
+
     return render(request, "shared_items.html", context={"shared_items": shared_items})
 
 
