@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 <!DOCTYPE html>
 <html>
 
@@ -36,9 +37,14 @@
                 <tr>
                     <td>{{ item.user_name }}</td>
                     <td data-id="{{ item.id }}" class="password">••••••</td>
-                    <td>{{ item.password_score }}</td>
-                    <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
-                    <td>{{ item.creation_date }}</td>
+                    <td class="score">
+                        {{ item.password_score }}
+                        <div class="score-bar">
+                            <div class="score-{{item.password_score}}"></div>
+                        </div>
+                    </td>
+                    <td class="item-url"><a href="{{ item.url }}" target="_blank" title="{{ item.url }}">{{ item.url }}</a></td>
+                    <td>{{ item.creation_date|date:"d/m/Y H:i" }}</td>
                     <td>{{ item.creation_user }}</td>
                     <td class="actions">
                         <a href="update_item/{{ item.id }}" title="Update" class="tooltip"><img class="edit"
@@ -72,11 +78,11 @@
                 <tr>
                     <td>{{ shared.item.user_name }}</td>
                     <td data-id="{{ shared.item.id }}" class="password">••••••</td>
-                    <td><a href="{{ shared.item.url }}" target="_blank">{{ shared.item.url }}</a></td>
-                    <td>{{ shared.item.creation_date }}</td>
+                    <td class="item-url"><a href="{{ shared.item.url }}" target="_blank" title="{{ shared.item.url }}">{{ shared.item.url }}</a></td>
+                    <td>{{ shared.item.creation_date|date:"d/m/Y H:i" }}</td>
                     <td>{{ shared.item.creation_user }}</td>
                     <td>{{ shared.receiving_user }}</td>
-                    <td>{{ shared.creation_date }}</td>
+                    <td>{{ shared.creation_date|date:"d/m/Y H:i" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

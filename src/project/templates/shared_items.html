@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,11 +33,11 @@
             <tr>
                 <td>{{ shared.item.user_name }}</td>
                 <td data-id="{{ shared.item.id }}" class="password">••••••</td>
-                <td><a href="{{ shared.item.url }}" target="_blank">{{ shared.item.url }}</a></td>
-                <td>{{ shared.item.creation_date }}</td>
+                <td class="item-url"><a href="{{ shared.item.url }}" target="_blank" title="{{ shared.item.url }}">{{ shared.item.url }}</a></td>
+                <td>{{ shared.item.creation_date|date:"d/m/Y H:i" }}</td>
                 <td>{{ shared.item.creation_user }}</td>
                 <td>{{ shared.receiving_user }}</td>
-                <td>{{ shared.creation_date }}</td>
+                <td>{{ shared.creation_date|date:"d/m/Y H:i" }}</td>
                 <td class="actions shared"><a href="{% url 'delete_shared' shared.id %}" title="Delete" class="tooltip"><img class="trash" src="{% static 'img/trash.png' %}" /></td>
             </tr>
             {% endfor %}

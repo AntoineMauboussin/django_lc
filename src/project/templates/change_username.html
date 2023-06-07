@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Password Manager</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/logs.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
+</head>
+
+<body>
+    {% include 'navigation_bar.html' %}
+    <div class="logs">
+        {% block content %}
+        <h2>Change my username</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="error alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'changedmymind' %}">
+            {% csrf_token %}
+            <table>
+                <tr>
+                  <td><label for="new_username">New username:</label></td>
+                  <td><input type="text" name="new_username" id="new_username" required></td>
+                </tr>
+              </table>
+            <button class="button" type="submit">Change</button>
+        </form>
+        {% endblock %}
+    </div>
+</body>
+
+</html>

@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from cryptography.fernet import Fernet
+from django.contrib import messages
 
 from django import forms
 from app.forms import RegisterForm, ShareForm
@@ -27,10 +28,17 @@ def register(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-            User.objects.create_user(
-                form.cleaned_data["username"], "", form.cleaned_data["password1"]
-            )
-            validation = True
+            existing_user = User.objects.filter(
+                username=form.cleaned_data["username"]
+            ).exists()
+
+            if existing_user:
+                messages.error(request, "Username is already in use.")
+            else:
+                User.objects.create_user(
+                    form.cleaned_data["username"], "", form.cleaned_data["password1"]
+                )
+                validation = True
 
     else:
         form = RegisterForm()
@@ -47,7 +55,7 @@ def create_item(request):
         password = crypter.encrypt(request.POST.get("password").encode()).decode()
         url = crypter.encrypt(request.POST.get("url").encode()).decode()
         creation_user = request.user
-        password_score = calculate_password_score(password)
+        password_score = calculate_password_score(request.POST.get("password"))
 
         item_object = Item.objects.create(
             user_name=user_name,
@@ -74,7 +82,7 @@ def update_item(request, item_id):
         item.password = crypter.encrypt(request.POST.get("password").encode()).decode()
         item.url = crypter.encrypt(request.POST.get("url").encode()).decode()
 
-        item.password_score = calculate_password_score(item.password)
+        item.password_score = calculate_password_score(request.POST.get("password"))
 
         item.save()
 
@@ -211,3 +219,19 @@ def display_password(request, id):
 
     else:
         return HttpResponseNotFound("error")
+
+@login_required
+def change_username(request):
+    if request.method == "POST":
+        new_username = request.POST.get("new_username")
+
+        existing_user = User.objects.filter(username=new_username).exists()
+        if existing_user:
+            messages.error(request, "Username is already in use.")
+        else:
+            user = request.user
+            user.username = new_username
+            user.save()
+            return redirect("index")
+
+    return render(request, "change_username.html")
