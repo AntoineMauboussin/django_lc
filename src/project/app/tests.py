@@ -21,7 +21,7 @@ class SeleniumTest(StaticLiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
-    def test_insert_item(self):
+    def test_register(self):
         self.selenium.get(f"{self.live_server_url}/accounts/register")
         #driver.get("http://127.0.0.1:8000/accounts/login/")
 
