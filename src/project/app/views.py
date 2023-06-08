@@ -65,7 +65,6 @@ def create_item(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 def update_item(request, item_id):
-    Item.objects.get
     item = Item.objects.get(id=item_id)
 
     if request.method == "POST":
@@ -144,8 +143,6 @@ def share_item(request, id):
             shared_existing = SharedItem.objects.filter(
                 item=item.first(), receiving_user=receiver.first()
             )
-
-            print(shared_existing)
 
             if not (shared_existing.exists()):
                 shared_item = SharedItem.objects.create(
