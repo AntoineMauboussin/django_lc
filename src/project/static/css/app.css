@@ -19,6 +19,46 @@ a:hover {
     color: red;
 }
 
+.action-username {
+    display: flex;
+    align-items: center;
+}
+
+.action-username img {
+    width: 12px;
+    height: 12px;
+    padding: 5px;
+    border-radius: 4px;
+    background-color: rgb(33, 155, 33);
+    border: none;
+}
+
+.action-username img:hover {
+    box-shadow: 0 0 4px yellowgreen;
+}
+
+.action-username a:hover {
+    border: none;
+}
+
+.action-username .tooltip {
+    display: inline;
+    position: relative;
+}
+
+.action-username .tooltip:hover:before {
+    background-color: rgb(0, 0, 0);
+    color: yellowgreen;
+    content: attr(title);
+    left: 0;
+    bottom: -25px;
+    position: absolute;
+    z-index: 100;
+    padding: 5px;
+    width: 110px;
+    text-align: center;
+}
+
 .button {
     font-size: 16px;
     padding: 10px 20px;

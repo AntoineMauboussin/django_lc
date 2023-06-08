@@ -3,10 +3,12 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from cryptography.fernet import Fernet
+from django.contrib import messages
 
 from django import forms
 from app.forms import RegisterForm, ShareForm
 from django.contrib.auth.models import User
+from django.http import JsonResponse, HttpResponseNotFound
 
 secret_key = "1c8FXcuaHL9qV3Zf5263TR_fU37dfkz9CU_O1ZFyno8="
 crypter = Fernet(secret_key.encode())
@@ -26,10 +28,17 @@ def register(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-            User.objects.create_user(
-                form.cleaned_data["username"], "", form.cleaned_data["password1"]
-            )
-            validation = True
+            existing_user = User.objects.filter(
+                username=form.cleaned_data["username"]
+            ).exists()
+
+            if existing_user:
+                messages.error(request, "Username is already in use.")
+            else:
+                User.objects.create_user(
+                    form.cleaned_data["username"], "", form.cleaned_data["password1"]
+                )
+                validation = True
 
     else:
         form = RegisterForm()
@@ -46,7 +55,7 @@ def create_item(request):
         password = crypter.encrypt(request.POST.get("password").encode()).decode()
         url = crypter.encrypt(request.POST.get("url").encode()).decode()
         creation_user = request.user
-        password_score = calculate_password_score(password)
+        password_score = calculate_password_score(request.POST.get("password"))
 
         item_object = Item.objects.create(
             user_name=user_name,
@@ -72,7 +81,7 @@ def update_item(request, item_id):
         item.password = crypter.encrypt(request.POST.get("password").encode()).decode()
         item.url = crypter.encrypt(request.POST.get("url").encode()).decode()
 
-        item.password_score = calculate_password_score(item.password)
+        item.password_score = calculate_password_score(request.POST.get("password"))
 
         item.save()
 
@@ -108,6 +117,12 @@ def items_list(request):
         item.url = crypter.decrypt(item.url.encode()).decode()
 
     shared_items = SharedItem.objects.filter(receiving_user=request.user)
+
+    for shared_item in shared_items:
+        shared_item.item.user_name = crypter.decrypt(shared_item.item.user_name.encode()).decode()
+        shared_item.item.password = crypter.decrypt(shared_item.item.password.encode()).decode()
+        shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
+
     has_shared_items = shared_items.exists()
     return render(
         request,
@@ -172,12 +187,8 @@ def shared_items(request):
     shared_items = SharedItem.objects.filter(sending_user=request.user)
 
     for shared_item in shared_items:
-        shared_item.item.user_name = crypter.decrypt(
-            shared_item.item.user_name.encode()
-        ).decode()
-        shared_item.item.password = crypter.decrypt(
-            shared_item.item.password.encode()
-        ).decode()
+        shared_item.item.user_name = crypter.decrypt(shared_item.item.user_name.encode()).decode()
+        shared_item.item.password = crypter.decrypt(shared_item.item.password.encode()).decode()
         shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
 
     return render(request, "shared_items.html", context={"shared_items": shared_items})
@@ -191,3 +202,33 @@ def delete_shared(request, id):
         shared_item.delete()
 
     return redirect("shared_items")
+
+@login_required
+def display_password(request, id):
+    item = Item.objects.get(id=id)
+    shared = SharedItem.objects.filter(item=item, receiving_user = request.user)
+    if(item.creation_user == request.user or shared.exists()):
+        data = {
+                'password': crypter.decrypt(item.password.encode()).decode()
+        }
+
+        return JsonResponse(data)
+
+    else:
+        return HttpResponseNotFound("error")
+
+@login_required
+def change_username(request):
+    if request.method == "POST":
+        new_username = request.POST.get("new_username")
+
+        existing_user = User.objects.filter(username=new_username).exists()
+        if existing_user:
+            messages.error(request, "Username is already in use.")
+        else:
+            user = request.user
+            user.username = new_username
+            user.save()
+            return redirect("index")
+
+    return render(request, "change_username.html")
