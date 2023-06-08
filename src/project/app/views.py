@@ -14,7 +14,7 @@ secret_key = "1c8FXcuaHL9qV3Zf5263TR_fU37dfkz9CU_O1ZFyno8="
 crypter = Fernet(secret_key.encode())
 
 from .utils import calculate_password_score
-from .models import Item, SharedItem
+from .models import Item, ItemHistory, SharedItem
 
 
 def index(request):
@@ -74,10 +74,20 @@ def create_item(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 def update_item(request, item_id):
-    Item.objects.get
     item = Item.objects.get(id=item_id)
 
     if request.method == "POST":
+        decrypted_username = crypter.decrypt(item.user_name.encode()).decode()
+        decrypted_password = crypter.decrypt(item.password.encode()).decode()
+        decrypted_url = crypter.decrypt(item.url.encode()).decode()
+
+        ItemHistory.objects.create(
+            item=item,
+            password=crypter.encrypt(decrypted_password.encode()).decode(),
+            user_name=crypter.encrypt(decrypted_username.encode()).decode(),
+            url=crypter.encrypt(decrypted_url.encode()).decode(),
+        )
+
         item.user_name = crypter.encrypt(request.POST.get("username").encode()).decode()
         item.password = crypter.encrypt(request.POST.get("password").encode()).decode()
         item.url = crypter.encrypt(request.POST.get("url").encode()).decode()
@@ -120,8 +130,12 @@ def items_list(request):
     shared_items = SharedItem.objects.filter(receiving_user=request.user)
 
     for shared_item in shared_items:
-        shared_item.item.user_name = crypter.decrypt(shared_item.item.user_name.encode()).decode()
-        shared_item.item.password = crypter.decrypt(shared_item.item.password.encode()).decode()
+        shared_item.item.user_name = crypter.decrypt(
+            shared_item.item.user_name.encode()
+        ).decode()
+        shared_item.item.password = crypter.decrypt(
+            shared_item.item.password.encode()
+        ).decode()
         shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
 
     has_shared_items = shared_items.exists()
@@ -160,8 +174,6 @@ def share_item(request, id):
                 item=item.first(), receiving_user=receiver.first()
             )
 
-            print(shared_existing)
-
             if not (shared_existing.exists()):
                 shared_item = SharedItem.objects.create(
                     item=item.first(),
@@ -190,8 +202,12 @@ def shared_items(request):
     shared_items = SharedItem.objects.filter(sending_user=request.user)
 
     for shared_item in shared_items:
-        shared_item.item.user_name = crypter.decrypt(shared_item.item.user_name.encode()).decode()
-        shared_item.item.password = crypter.decrypt(shared_item.item.password.encode()).decode()
+        shared_item.item.user_name = crypter.decrypt(
+            shared_item.item.user_name.encode()
+        ).decode()
+        shared_item.item.password = crypter.decrypt(
+            shared_item.item.password.encode()
+        ).decode()
         shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
 
     return render(request, "shared_items.html", context={"shared_items": shared_items})
@@ -206,19 +222,19 @@ def delete_shared(request, id):
 
     return redirect("shared_items")
 
+
 @login_required
 def display_password(request, id):
     item = Item.objects.get(id=id)
-    shared = SharedItem.objects.filter(item=item, receiving_user = request.user)
-    if(item.creation_user == request.user or shared.exists()):
-        data = {
-                'password': crypter.decrypt(item.password.encode()).decode()
-        }
+    shared = SharedItem.objects.filter(item=item, receiving_user=request.user)
+    if item.creation_user == request.user or shared.exists():
+        data = {"password": crypter.decrypt(item.password.encode()).decode()}
 
         return JsonResponse(data)
 
     else:
         return HttpResponseNotFound("error")
+
 
 @login_required
 def change_username(request):
@@ -235,3 +251,47 @@ def change_username(request):
             return redirect("index")
 
     return render(request, "change_username.html")
+
+
+@login_required
+def item_history(request):
+    user = request.user
+
+    items = Item.objects.filter(creation_user=user)
+    item_history = ItemHistory.objects.filter(item__in=items)
+
+    shared_items = SharedItem.objects.filter(receiving_user=user)
+    shared_item_history = []
+
+    for shared_item in shared_items:
+        shared_item.item.user_name = crypter.decrypt(
+            shared_item.item.user_name.encode()
+        ).decode()
+        shared_item.item.password = crypter.decrypt(
+            shared_item.item.password.encode()
+        ).decode()
+        shared_item.item.url = crypter.decrypt(shared_item.item.url.encode()).decode()
+        shared_item_history.extend(ItemHistory.objects.filter(item=shared_item.item))
+
+    for item in item_history:
+        item.password = crypter.decrypt(item.password.encode()).decode()
+        item.user_name = crypter.decrypt(item.user_name.encode()).decode()
+        item.url = crypter.decrypt(item.url.encode()).decode()
+
+    for history in shared_item_history:
+        history.item.password = crypter.decrypt(history.item.password.encode()).decode()
+        history.item.user_name = crypter.decrypt(
+            history.item.user_name.encode()
+        ).decode()
+        history.item.url = crypter.decrypt(history.item.url.encode()).decode()
+
+    has_shared_items = shared_items.exists()
+    return render(
+        request,
+        "item_history.html",
+        context={
+            "item_history": item_history,
+            "shared_item_history": shared_item_history,
+            "has_shared_items": has_shared_items,
+        },
+    )
