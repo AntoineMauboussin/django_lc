@@ -21,3 +21,10 @@ class SharedItem(Model):
     )
     receiving_user = models.ForeignKey(User, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(auto_now_add=True)
+
+class ItemHistory(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    password = models.CharField(max_length=255)
+    user_name = models.CharField(max_length=255)
+    url = models.CharField(blank=False, null=False, max_length=255)
+    modified_at = models.DateTimeField(auto_now_add=True)
