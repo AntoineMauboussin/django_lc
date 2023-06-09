@@ -10,7 +10,7 @@ Liste des routes :
 accounts/register
 create_item
 items_list
-share_item/<int:id>
+share_item/<id>
 shared_items
 delete_shared/<id>
 update_item/<id>
