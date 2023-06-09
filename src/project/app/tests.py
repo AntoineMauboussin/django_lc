@@ -129,52 +129,6 @@ class ItemViewsTestCase(TestCase):
         self.assertEqual(decrypted_password, "newpassword")
         self.assertEqual(decrypted_url, "https://example.org")
 
-    def test_update_item(self):
-        # Crée un item pour les tests
-        item = Item.objects.create(
-            user_name="John Doe",
-            password="securepassword",
-            url="https://example.com",
-            creation_user=self.user,
-        )
-
-        # Crée un client de test
-        client = Client()
-        # Connecte l'utilisateur
-        client.login(username="john", password="password123")
-
-        # Envoie une requête POST pour mettre à jour l'item
-        response = client.post(
-            reverse("update_item", args=[item.id]),
-            {
-                "username": "Jane Smith",
-                "password": "newpassword",
-                "url": "https://example.org",
-            },
-        )
-
-        # Vérifie que la redirection vers la liste des items a été effectuée
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("items_list"))
-
-        # Vérifie que les données de l'item ont été correctement chiffrées
-        updated_item = Item.objects.get(pk=item.pk)
-        self.assertNotEqual(updated_item.user_name, "John Doe")
-        self.assertNotEqual(updated_item.password, "securepassword")
-        self.assertNotEqual(updated_item.url, "https://example.com")
-
-        # Vérifie que les données de l'item peuvent être correctement déchiffrées
-        decrypted_username = self.crypter.decrypt(
-            updated_item.user_name.encode()
-        ).decode()
-        decrypted_password = self.crypter.decrypt(
-            updated_item.password.encode()
-        ).decode()
-        decrypted_url = self.crypter.decrypt(updated_item.url.encode()).decode()
-        self.assertEqual(decrypted_username, "Jane Smith")
-        self.assertEqual(decrypted_password, "newpassword")
-        self.assertEqual(decrypted_url, "https://example.org")
-
     def test_delete_item(self):
         # Crée un item pour les tests
         item = Item.objects.create(
