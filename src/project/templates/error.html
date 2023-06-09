@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Password Manager</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/navigation_bar.css' %}" type="text/css">
+</head>
+
+<body>
+    {% include 'navigation_bar.html' %}
+    <div id="error-page">
+        <h1 class="error-type">{{ error }}</h1>
+        <p class="error-message">{{ message }}</p>
+        <a class="button" href="{% url 'index' %}">Return to a safe place</a>
+    </div>
+</body>
+
+</html>

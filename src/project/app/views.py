@@ -8,7 +8,7 @@ from django.contrib import messages
 from django import forms
 from app.forms import RegisterForm, ShareForm
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 
 secret_key = "1c8FXcuaHL9qV3Zf5263TR_fU37dfkz9CU_O1ZFyno8="
 crypter = Fernet(secret_key.encode())
@@ -74,7 +74,31 @@ def create_item(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 def update_item(request, item_id):
-    item = Item.objects.get(id=item_id)
+    try:
+        item = Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        error = "404"
+        message = "Password not found"
+        return render(
+            request,
+            "error.html",
+            context={
+                "message": message,
+                "error": error,
+            },
+        )
+
+    if item.creation_user != request.user:
+        error = "403"
+        message = "You are not the creator of this password"
+        return render(
+            request,
+            "error.html",
+            context={
+                "message": message,
+                "error": error,
+            },
+        )
 
     if request.method == "POST":
         decrypted_username = crypter.decrypt(item.user_name.encode()).decode()
@@ -113,7 +137,32 @@ def update_item(request, item_id):
 
 @login_required
 def delete_item(request, item_id):
-    item = Item.objects.filter(id=item_id)
+    try:
+        item = Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        error = "404"
+        message = "Password not found"
+        return render(
+            request,
+            "error.html",
+            context={
+                "message": message,
+                "error": error,
+            },
+        )
+
+    if item.creation_user != request.user:
+        error = "403"
+        message = "You are not the creator of this password"
+        return render(
+            request,
+            "error.html",
+            context={
+                "message": message,
+                "error": error,
+            },
+        )
+
     item.delete()
     return redirect(reverse("items_list"))
 
@@ -157,6 +206,10 @@ def share_item(request, id):
 
     if not item.exists():
         context = {"validation": "Invalid Url"}
+        return render(request, "share_item.html", context)
+
+    if item.first().creation_user != request.user:
+        context = {"validation": "You are not the creator of this password"}
         return render(request, "share_item.html", context)
 
     if request.method == "POST":
